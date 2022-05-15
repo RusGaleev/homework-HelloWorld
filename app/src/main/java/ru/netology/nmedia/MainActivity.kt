@@ -2,12 +2,16 @@ package ru.netology.nmedia
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import ru.netology.nmedia.data.Post
 import ru.netology.nmedia.databinding.ActivityMainBinding
+import ru.netology.nmedia.viewModel.PostViewModel
 
 
 class MainActivity : AppCompatActivity() {
+
+    private val viewModel by viewModels<PostViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,30 +19,16 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        var post = Post(
-            id = 1,
-            author = "Sasha",
-            content = "Events",
-            published = "07.05.2022",
-            likes = 111
-        )
-
-        binding.render(post)
-        binding.postFavoriteButton.setOnClickListener {
-            post.likedByMe = !post.likedByMe
-            post = if(post.likedByMe){
-                post.copy(likes = post.likes + 1)
-            } else {
-                post.copy(likes = post.likes - 1)
-            }
+        viewModel.data.observe(this){post ->
             binding.render(post)
-            binding.postFavoriteButton.setImageResource(getLikeIconResId(post.likedByMe))
+        }
+
+        binding.postFavoriteButton.setOnClickListener {
+            viewModel.onLikeClicked()
         }
         binding.postShareButton.setOnClickListener{
-            post = post.copy(shares = post.shares + 10)
-            binding.render(post)
+            viewModel.onShareClicked()
         }
-        setContentView(binding.root)
     }
 
     private fun ActivityMainBinding.render(post: Post) {
