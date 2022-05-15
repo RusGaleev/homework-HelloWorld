@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         val adapter =PostsAdapter(viewModel::onLikeClicked, viewModel::onShareClicked)
         binding.postsRecyclerView.adapter = adapter
         viewModel.data.observe(this) { posts ->
-            adapter.posts =posts
+            adapter.submitList(posts)
         }
     }
 }
