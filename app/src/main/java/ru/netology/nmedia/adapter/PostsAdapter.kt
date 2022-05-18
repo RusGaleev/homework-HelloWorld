@@ -1,9 +1,11 @@
 package ru.netology.nmedia.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.annotation.DrawableRes
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -52,9 +54,6 @@ internal class PostsAdapter(
         }
 
         init {
-            binding.postFavoriteButton.setOnClickListener {
-                listener.onDeleteClicked(post)
-            }
             binding.postShareButton.setOnClickListener{listener.onShareClicked(post)}
             binding.postFavoriteButton.setOnClickListener{listener.onLikeClicked(post)}
         }
@@ -68,8 +67,6 @@ internal class PostsAdapter(
                 postFavoriteText.text = countNumbers(post.likes)
                 postShareText.text = countNumbers(post.shares)
                 postFavoriteButton.setImageResource(getLikeIconResId(post.likedByMe))
-//                postFavoriteButton.setOnClickListener { onLikeClicked(post) }
-//                postShareButton.setOnClickListener { onShareClicked(post) }
                 postOptions.setOnClickListener { popupMenu.show() }
             }
         }

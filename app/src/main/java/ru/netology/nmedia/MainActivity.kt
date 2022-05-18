@@ -2,6 +2,7 @@ package ru.netology.nmedia
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.ActivityMainBinding
@@ -28,6 +29,13 @@ class MainActivity : AppCompatActivity() {
             with(binding.contentEditText) {
                 val content = text.toString()
                 viewModel.onSaveButtonClick(content)
+                clearFocus()
+                hideKeyboard()
+            }
+        }
+        binding.closeButton.setOnClickListener{
+            binding.editGroup.visibility = View.GONE
+            with(binding.contentEditText) {
                 clearFocus()
                 hideKeyboard()
             }

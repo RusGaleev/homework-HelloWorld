@@ -6,4 +6,7 @@
     <string name="remove">Удалить</string>
     <string name="post_text">Текст</string>
     <string name="menu_edit">Редактировать</string>
+    <string name="close_edit">Закрыть редактирование</string>
+    <string name="edit_post_text">Редактировать пост</string>
+    <string name="edit_icon">Редактировать</string>
 </resources>
