@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
 
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        binding.editGroup.visibility = View.GONE
         val adapter = PostsAdapter(viewModel)
         binding.postsRecyclerView.adapter = adapter
         viewModel.data.observe(this) { posts ->
@@ -36,15 +36,23 @@ class MainActivity : AppCompatActivity() {
         }
         binding.closeButton.setOnClickListener{
             binding.editGroup.visibility = View.GONE
+            with(binding.contentEditText) {
+                clearFocus()
+                hideKeyboard()
+                viewModel.currentPost.value = null
+            }
         }
         viewModel.currentPost.observe(this){ currentPost ->
             with(binding.contentEditText) {
                 val content = currentPost?.content
                 setText(content)
-                if(content != null) requestFocus()
+                if(content != null) {
+                    requestFocus()
+                    binding.editGroup.visibility = View.VISIBLE
+                }
             }
             binding.contentTextView.text = currentPost?.content
-            binding.editGroup.visibility = View.VISIBLE
+
         }
     }
 }
