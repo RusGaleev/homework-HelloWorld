@@ -32,13 +32,10 @@ class MainActivity : AppCompatActivity() {
                 clearFocus()
                 hideKeyboard()
             }
+            binding.editGroup.visibility = View.GONE
         }
         binding.closeButton.setOnClickListener{
             binding.editGroup.visibility = View.GONE
-            with(binding.contentEditText) {
-                clearFocus()
-                hideKeyboard()
-            }
         }
         viewModel.currentPost.observe(this){ currentPost ->
             with(binding.contentEditText) {
@@ -46,6 +43,8 @@ class MainActivity : AppCompatActivity() {
                 setText(content)
                 if(content != null) requestFocus()
             }
+            binding.contentTextView.text = currentPost?.content
+            binding.editGroup.visibility = View.VISIBLE
         }
     }
 }

@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="top"
-        app:constraint_referenced_ids="constantTextEditView, textPostView, closeButton" />
+        app:constraint_referenced_ids="constantTextEditView, contentTextView, closeButton" />
 
     <EditText
         android:id="@+id/contentEditText"
@@ -57,7 +57,7 @@
         app:constraint_referenced_ids="contentEditText, saveButton" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/textPostView"
+        android:id="@+id/contentTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         tools:text="Редактируемый пост"
@@ -71,7 +71,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         tools:text="@string/edit_post_text"
-        app:layout_constraintBottom_toTopOf="@+id/textPostView"
+        android:text="@string/edit_post_text"
+        app:layout_constraintBottom_toTopOf="@+id/contentTextView"
         app:layout_constraintEnd_toStartOf="@+id/closeButton"
         app:layout_constraintStart_toEndOf="@+id/editImageView"
         app:layout_constraintTop_toBottomOf="@+id/toolsTopBarrier"
@@ -85,7 +86,7 @@
         android:background="@android:color/transparent"
         app:layout_constraintTop_toTopOf="@+id/toolsTopBarrier"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textPostView"
+        app:layout_constraintEnd_toStartOf="@+id/contentTextView"
         android:contentDescription="@string/edit_icon"
         app:srcCompat="@drawable/ic_edit_24dp"/>
 
@@ -97,7 +98,7 @@
         android:padding="8dp"
         app:layout_constraintBottom_toTopOf="@+id/toolsMidBarrier"
         app:layout_constraintTop_toTopOf="@+id/toolsTopBarrier"
-        app:layout_constraintStart_toEndOf="@+id/textPostView"
+        app:layout_constraintStart_toEndOf="@+id/contentTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_clear_24dp"
         android:contentDescription="@string/close_edit" />
@@ -107,5 +108,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="visible"
-        app:constraint_referenced_ids="toolsTopBarrier,constantTextEditView, textPostView, editImageView, closeButton" />
+        app:constraint_referenced_ids="toolsTopBarrier,constantTextEditView, contentTextView, editImageView, closeButton" />
 </androidx.constraintlayout.widget.ConstraintLayout>

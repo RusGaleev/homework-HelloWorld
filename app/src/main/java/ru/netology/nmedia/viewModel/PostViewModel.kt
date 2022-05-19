@@ -29,6 +29,10 @@ class PostViewModel:ViewModel(), PostInteractionsListener {
         currentPost.value = null
     }
 
+    fun onCloseButtonClick(){
+        currentPost.value = null
+    }
+
     // region PostInteractionsListener
     override fun onShareClicked(post:Post) = repository.share(post.id)
     override fun onLikeClicked(post:Post) = repository.like(post.id)
