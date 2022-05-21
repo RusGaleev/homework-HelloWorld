@@ -58,6 +58,7 @@ internal class PostsAdapter(
         init {
             binding.postShareButton.setOnClickListener{listener.onShareClicked(post)}
             binding.postFavoriteButton.setOnClickListener{listener.onLikeClicked(post)}
+            binding.postOptions.setOnClickListener { popupMenu.show() }
         }
 
         fun bind(post: Post) {
@@ -66,10 +67,10 @@ internal class PostsAdapter(
                 postAuthorName.text = post.author
                 postText.text = post.content
                 postDate.text = post.published
-                postFavoriteText.text = countNumbers(post.likes)
-                postShareText.text = countNumbers(post.shares)
-                postFavoriteButton.setImageResource(getLikeIconResId(post.likedByMe))
-                postOptions.setOnClickListener { popupMenu.show() }
+                postFavoriteButton.text = countNumbers(post.likes)
+                postShareButton.text = countNumbers(post.shares)
+                postFavoriteButton.isChecked = post.likedByMe
+//                postFavoriteButton.setButtonDrawable(getLikeIconResId(post.likedByMe))
             }
         }
 
