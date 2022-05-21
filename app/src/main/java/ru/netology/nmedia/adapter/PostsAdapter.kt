@@ -1,25 +1,28 @@
-package ru.netology.nmedia.data.impl
+package ru.netology.nmedia.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.annotation.DrawableRes
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import ru.netology.nmedia.MainActivity
 import ru.netology.nmedia.R
 import ru.netology.nmedia.data.Post
+import ru.netology.nmedia.databinding.ActivityMainBinding
 import ru.netology.nmedia.databinding.PostBinding
-import kotlin.properties.Delegates
 
 internal class PostsAdapter(
-    private val onLikeClicked: (Post) -> Unit,
-    private val onShareClicked: (Post) -> Unit
+    private val interactionsListener: PostInteractionsListener
 ) : ListAdapter<Post, PostsAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = PostBinding.inflate(inflater, parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(binding, interactionsListener)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -27,17 +30,47 @@ internal class PostsAdapter(
     }
 
     inner class ViewHolder(
-        private val binding: PostBinding
+        private val binding: PostBinding,
+        listener: PostInteractionsListener
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(post: Post) = with(binding) {
-            postAuthorName.text = post.author
-            postText.text = post.content
-            postDate.text = post.published
-            postFavoriteText.text = countNumbers(post.likes)
-            postShareText.text = countNumbers(post.shares)
-            postFavoriteButton.setImageResource(getLikeIconResId(post.likedByMe))
-            postFavoriteButton.setOnClickListener { onLikeClicked(post) }
-            postShareButton.setOnClickListener { onShareClicked(post) }
+
+        private lateinit var post: Post
+
+        private val popupMenu by lazy {
+            PopupMenu(itemView.context, binding.postOptions).apply {
+                inflate(R.menu.options_post)
+                setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
+                        R.id.remove -> {
+                            listener.onDeleteClicked(post)
+                            true
+                        }
+                        R.id.edit ->{
+                            listener.onEditClicked(post)
+                            true
+                        }
+                        else -> false
+                    }
+                }
+            }
+        }
+
+        init {
+            binding.postShareButton.setOnClickListener{listener.onShareClicked(post)}
+            binding.postFavoriteButton.setOnClickListener{listener.onLikeClicked(post)}
+        }
+
+        fun bind(post: Post) {
+            this.post = post
+            with(binding) {
+                postAuthorName.text = post.author
+                postText.text = post.content
+                postDate.text = post.published
+                postFavoriteText.text = countNumbers(post.likes)
+                postShareText.text = countNumbers(post.shares)
+                postFavoriteButton.setImageResource(getLikeIconResId(post.likedByMe))
+                postOptions.setOnClickListener { popupMenu.show() }
+            }
         }
 
         private fun countNumbers(likes: Int): String {
