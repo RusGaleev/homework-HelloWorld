@@ -41,5 +41,11 @@ class MainActivity : AppCompatActivity() {
         viewModel.navigateToPostContentScreenEvent.observe(this){
             postContentActivityLauncher.launch()
         }
+
+        viewModel.currentPost.observe(this) { currentPost ->
+            if (currentPost != null) {
+                postContentActivityLauncher.launch()
+            }
+        }
     }
 }
