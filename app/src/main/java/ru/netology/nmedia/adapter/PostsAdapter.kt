@@ -58,6 +58,7 @@ internal class PostsAdapter(
         init {
             binding.postShareButton.setOnClickListener{listener.onShareClicked(post)}
             binding.postFavoriteButton.setOnClickListener{listener.onLikeClicked(post)}
+            binding.postOptions.setOnClickListener { popupMenu.show() }
         }
 
         fun bind(post: Post) {
@@ -69,10 +70,8 @@ internal class PostsAdapter(
                 postFavoriteText.text = countNumbers(post.likes)
                 postShareText.text = countNumbers(post.shares)
                 postFavoriteButton.setImageResource(getLikeIconResId(post.likedByMe))
-                postOptions.setOnClickListener { popupMenu.show() }
             }
         }
-
         private fun countNumbers(likes: Int): String {
             return when (likes) {
                 in 1..999 -> "$likes"

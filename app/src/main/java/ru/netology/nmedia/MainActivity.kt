@@ -3,7 +3,9 @@ package ru.netology.nmedia
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.launch
 import androidx.activity.viewModels
+import ru.netology.nmedia.activity.PostContentActivity
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.ActivityMainBinding
 import ru.netology.nmedia.util.hideKeyboard
@@ -19,40 +21,25 @@ class MainActivity : AppCompatActivity() {
 
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.editGroup.visibility = View.GONE
         val adapter = PostsAdapter(viewModel)
         binding.postsRecyclerView.adapter = adapter
         viewModel.data.observe(this) { posts ->
             adapter.submitList(posts)
         }
-        binding.saveButton.setOnClickListener{
-            with(binding.contentEditText) {
-                val content = text.toString()
-                viewModel.onSaveButtonClick(content)
-                clearFocus()
-                hideKeyboard()
-            }
-            binding.editGroup.visibility = View.GONE
-        }
-        binding.closeButton.setOnClickListener{
-            binding.editGroup.visibility = View.GONE
-            with(binding.contentEditText) {
-                clearFocus()
-                hideKeyboard()
-                viewModel.currentPost.value = null
-            }
-        }
-        viewModel.currentPost.observe(this){ currentPost ->
-            with(binding.contentEditText) {
-                val content = currentPost?.content
-                setText(content)
-                if(content != null) {
-                    requestFocus()
-                    binding.editGroup.visibility = View.VISIBLE
-                }
-            }
-            binding.contentTextView.text = currentPost?.content
 
+        binding.fab.setOnClickListener{
+            viewModel.onAddClicked()
+        }
+
+        val postContentActivityLauncher = registerForActivityResult(
+            PostContentActivity.ResultContract
+        ){ postContent ->
+            postContent?: return@registerForActivityResult
+            viewModel.onSaveButtonClick(postContent)
+        }
+
+        viewModel.navigateToPostContentScreenEvent.observe(this){
+            postContentActivityLauncher.launch()
         }
     }
 }
