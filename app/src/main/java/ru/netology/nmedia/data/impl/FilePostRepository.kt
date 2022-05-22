@@ -5,25 +5,25 @@ import android.app.Application
 import android.content.Context
 import androidx.core.content.edit
 import androidx.lifecycle.MutableLiveData
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import ru.netology.nmedia.data.Post
 import ru.netology.nmedia.data.PostRepository
 import kotlin.properties.Delegates
 
 class FilePostRepository(
-    application: Application
+    private val application: Application
 ) : PostRepository {
 
-
-    private val prefs =application.getSharedPreferences(
+    private val gson = Gson()
+    private val type = TypeToken.getParameterized(List::class.java, Post::class.java).type
+    private val prefs = application.getSharedPreferences(
         "repo", Context.MODE_PRIVATE
     )
     private var nextId by Delegates.observable(
         prefs.getLong(NEXT_ID_PREFS_KEY, 0L)
-    ) { _,_,newValue ->
-        prefs.edit{
+    ) { _, _, newValue ->
+        prefs.edit {
             putLong(NEXT_ID_PREFS_KEY, newValue)
         }
     }
@@ -32,29 +32,39 @@ class FilePostRepository(
         get() = checkNotNull(data.value) {
             "Data value not be null"
         }
-
-    set(value) {
-        prefs.edit{
-            val serializedPosts = Json.encodeToString(value)
-            putString(POSTS_PREFS_KEY, serializedPosts)
+        set(value) {
+            application.openFileOutput(
+                FILE_NAME, Context.MODE_PRIVATE
+            ).bufferedWriter().use {
+                it.write(gson.toJson(value))
+            }
+            data.value = value
         }
-        data.value = value
-    }
 
     override val data: MutableLiveData<List<Post>>
 
     init {
-        val serializedPosts = prefs.getString(POSTS_PREFS_KEY, null)
-        val posts :List<Post> =  if (serializedPosts != null) {
-            Json.decodeFromString(serializedPosts)
+        val postsFile = application.filesDir.resolve(FILE_NAME)
+        val posts: List<Post> = if (postsFile.exists()) {
+            val inputStream = application.openFileInput(FILE_NAME)
+            val reader = inputStream.bufferedReader()
+            reader.use { gson.fromJson(it, type) }
         } else emptyList()
-        data =MutableLiveData(posts)
+        data = MutableLiveData(posts)
     }
+
     override fun like(postId: Long) {
         posts = posts.map {
             if (it.id != postId) it
-            else {it.copy(likedByMe = !it.likedByMe,
-                    likes = if (it.likedByMe) {it.likes - 1} else {it.likes + 1})
+            else {
+                it.copy(
+                    likedByMe = !it.likedByMe,
+                    likes = if (it.likedByMe) {
+                        it.likes - 1
+                    } else {
+                        it.likes + 1
+                    }
+                )
             }
         }
     }
@@ -74,26 +84,22 @@ class FilePostRepository(
         if (post.id == PostRepository.NEW_POST_ID) insert(post) else update(post)
     }
 
-    private fun insert(post:Post){
+    private fun insert(post: Post) {
         posts = listOf(
             post.copy(
-                id =++nextId
+                id = ++nextId
             )
         ) + posts
     }
 
     private fun update(post: Post) {
-        posts= posts.map{
-            if(it.id == post.id) post else it
+        posts = posts.map {
+            if (it.id == post.id) post else it
         }
     }
 
     private companion object {
         const val FILE_NAME = "posts.json"
-        const val POSTS_PREFS_KEY = "posts"
         const val NEXT_ID_PREFS_KEY = "nextId"
-
-
     }
-
 }
