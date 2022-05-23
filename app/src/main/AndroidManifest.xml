@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HelloWorld">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.AppActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,7 +20,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.IntentHandlerActivity"
+        <activity android:name=".ui.IntentHandlerActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
@@ -28,9 +29,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activity.PostContentActivity"
-            android:exported="false" />
     </application>
 
 </manifest>
