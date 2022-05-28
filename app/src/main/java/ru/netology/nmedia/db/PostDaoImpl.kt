@@ -75,7 +75,7 @@ class PostDaoImpl(
         db.execSQL(
             """
            UPDATE ${PostsTable.NAME} SET
-               shares = shares + 1
+               shares = shares + 10
            WHERE id = ?;
         """.trimIndent(),
             arrayOf(id)

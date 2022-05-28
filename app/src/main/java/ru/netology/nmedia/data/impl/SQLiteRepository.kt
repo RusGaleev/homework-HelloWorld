@@ -42,7 +42,7 @@ class SQLiteRepository(
         dao.shareById(id)
         data.value = posts.map {
             if (it.id != id) it else it.copy(
-                likes = it.shares + 1
+                shares = it.shares + 10
             )
         }
     }
