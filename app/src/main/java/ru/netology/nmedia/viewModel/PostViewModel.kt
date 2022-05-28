@@ -1,15 +1,24 @@
 package ru.netology.nmedia.viewModel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.netology.nmedia.adapter.PostInteractionsListener
 import ru.netology.nmedia.data.Post
 import ru.netology.nmedia.data.PostRepository
 import ru.netology.nmedia.data.impl.InMemoryPostRepository
+import ru.netology.nmedia.data.impl.SQLiteRepository
+import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.util.SingleLiveEvent
 
-class PostViewModel:ViewModel(), PostInteractionsListener {
-    private val repository: PostRepository = InMemoryPostRepository()
+class PostViewModel(application: Application): AndroidViewModel(application), PostInteractionsListener {
+    private val repository: PostRepository = SQLiteRepository(
+        dao = AppDb.getInstance(
+            context = application
+        ).postDao
+    )
+
     val data by repository::data
     val navigateToPostContentScreenEvent = SingleLiveEvent<String>()
     val sharePostContent = SingleLiveEvent<String>()

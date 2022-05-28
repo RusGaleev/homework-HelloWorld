@@ -6,13 +6,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import ru.netology.nmedia.databinding.PostContentFragmentBinding
 import ru.netology.nmedia.databinding.PostFragmentBinding
 
 class PostFragment : Fragment() {
-
-    private val args by navArgs<PostFragment>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
