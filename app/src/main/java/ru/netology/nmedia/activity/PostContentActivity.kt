@@ -5,15 +5,21 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import ru.netology.nmedia.databinding.PostContentActivityBinding
+import ru.netology.nmedia.viewModel.PostViewModel
 
-class PostContentActivity : AppCompatActivity() {
+class PostContentActivity() : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = PostContentActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.editText.requestFocus()
+        val postContent = intent.getStringExtra(POST_CONTENT)
+        binding.editText.setText(postContent)
+
         binding.ok.setOnClickListener {
             val intent = Intent()
             val text = binding.editText.text
@@ -38,7 +44,13 @@ class PostContentActivity : AppCompatActivity() {
             } else null
     }
 
-    private companion object {
+    companion object {
         private const val RESULT_KEY = "postNewContent"
+        private const val POST_CONTENT = "postContent"
+
+        fun newIntentEdit(context: Context, postContent: String): Intent {
+            val intent = Intent(context, PostContentActivity::class.java)
+            return intent.putExtra(POST_CONTENT, postContent)
+        }
     }
 }

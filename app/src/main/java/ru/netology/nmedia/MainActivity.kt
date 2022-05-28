@@ -1,14 +1,14 @@
 package ru.netology.nmedia
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.view.View
 import androidx.activity.result.launch
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import ru.netology.nmedia.activity.PostContentActivity
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.ActivityMainBinding
-import ru.netology.nmedia.util.hideKeyboard
 import ru.netology.nmedia.viewModel.PostViewModel
 
 
@@ -27,24 +27,34 @@ class MainActivity : AppCompatActivity() {
             adapter.submitList(posts)
         }
 
-        binding.fab.setOnClickListener{
+        binding.fab.setOnClickListener {
             viewModel.onAddClicked()
         }
 
         val postContentActivityLauncher = registerForActivityResult(
             PostContentActivity.ResultContract
-        ){ postContent ->
-            postContent?: return@registerForActivityResult
+        ) { postContent ->
+            postContent ?: return@registerForActivityResult
             viewModel.onSaveButtonClick(postContent)
         }
 
-        viewModel.navigateToPostContentScreenEvent.observe(this){
+        viewModel.navigateToPostContentScreenEvent.observe(this) {
             postContentActivityLauncher.launch()
         }
 
-        viewModel.currentPost.observe(this) { currentPost ->
-            if (currentPost != null) {
-                postContentActivityLauncher.launch()
+        viewModel.editPostContentScreenEvent.observe(this) { initialContent ->
+//            postContentActivityLauncher.launch()
+            if (initialContent != null) {
+                val intent = PostContentActivity.newIntentEdit(this, initialContent)
+                startActivity(intent)
+            }
+        }
+        viewModel.playVideo.observe(this) { videoUrl ->
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse(videoUrl)
+            }
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivity(intent)
             }
         }
     }
