@@ -34,9 +34,9 @@ class PostContentActivity() : AppCompatActivity() {
         }
     }
 
-    object ResultContract : ActivityResultContract<Unit, String?>() {
-        override fun createIntent(context: Context, input: Unit): Intent =
-            Intent(context, PostContentActivity::class.java)
+    object ResultContract : ActivityResultContract<String, String?>() {
+        override fun createIntent(context: Context, input: String): Intent =
+            Intent(context, PostContentActivity::class.java).apply { putExtra(POST_CONTENT,input) }
 
         override fun parseResult(resultCode: Int, intent: Intent?) =
             if (resultCode == Activity.RESULT_OK) {
@@ -47,10 +47,5 @@ class PostContentActivity() : AppCompatActivity() {
     companion object {
         private const val RESULT_KEY = "postNewContent"
         private const val POST_CONTENT = "postContent"
-
-        fun newIntentEdit(context: Context, postContent: String): Intent {
-            val intent = Intent(context, PostContentActivity::class.java)
-            return intent.putExtra(POST_CONTENT, postContent)
-        }
     }
 }

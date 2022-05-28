@@ -12,7 +12,7 @@ class PostViewModel:ViewModel(), PostInteractionsListener {
     private val repository: PostRepository = InMemoryPostRepository()
 
     val data by repository::data
-    val navigateToPostContentScreenEvent = SingleLiveEvent<Unit>()
+    val navigateToPostContentScreenEvent = SingleLiveEvent<String>()
     val editPostContentScreenEvent = SingleLiveEvent<String>()
 
     /**

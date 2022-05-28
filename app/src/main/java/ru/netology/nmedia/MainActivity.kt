@@ -39,16 +39,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.navigateToPostContentScreenEvent.observe(this) {
-            postContentActivityLauncher.launch()
+            postContentActivityLauncher.launch("")
         }
 
         viewModel.editPostContentScreenEvent.observe(this) { initialContent ->
-//            postContentActivityLauncher.launch()
-            if (initialContent != null) {
-                val intent = PostContentActivity.newIntentEdit(this, initialContent)
-                startActivity(intent)
-            }
+            postContentActivityLauncher.launch(initialContent)
         }
+
         viewModel.playVideo.observe(this) { videoUrl ->
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 data = Uri.parse(videoUrl)
