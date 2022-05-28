@@ -59,9 +59,11 @@ internal class PostsAdapter(
         init {
             binding.postShareButton.setOnClickListener{listener.onShareClicked(post)}
             binding.postFavoriteButton.setOnClickListener{listener.onLikeClicked(post)}
+
             binding.videoBanner.setOnClickListener{
                 listener.onPlayVideoClicked(post)
             }
+
             binding.postOptions.setOnClickListener { popupMenu.show() }
         }
 
@@ -75,6 +77,7 @@ internal class PostsAdapter(
                 postShareText.text = countNumbers(post.shares)
                 postFavoriteButton.setImageResource(getLikeIconResId(post.likedByMe))
                 videoGroup.isVisible = post.video != null
+
             }
         }
         private fun countNumbers(likes: Int): String {
