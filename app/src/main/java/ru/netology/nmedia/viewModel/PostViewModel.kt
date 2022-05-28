@@ -10,7 +10,6 @@ import ru.netology.nmedia.util.SingleLiveEvent
 
 class PostViewModel:ViewModel(), PostInteractionsListener {
     private val repository: PostRepository = InMemoryPostRepository()
-
     val data by repository::data
     val navigateToPostContentScreenEvent = SingleLiveEvent<String>()
     val sharePostContent = SingleLiveEvent<String>()

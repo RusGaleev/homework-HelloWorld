@@ -8,23 +8,20 @@ import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import ru.netology.nmedia.databinding.PostContentFragmentBinding
+import ru.netology.nmedia.databinding.PostFragmentBinding
 
-class PostContentFragment : Fragment() {
+class PostFragment : Fragment() {
 
-    private val args by navArgs<PostContentFragmentArgs>()
+    private val args by navArgs<PostFragment>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) = PostContentFragmentBinding.inflate(
+    ) = PostFragmentBinding.inflate(
         layoutInflater, container, false
     ).also { binding->
-        binding.editText.setText(args.initialContent)
-        binding.editText.requestFocus()
-        binding.ok.setOnClickListener {
-            onOkButtonClicked(binding)
-        }
+        binding.postCard.setOnClickListener{ }
     }.root
 
     private fun onOkButtonClicked(binding: PostContentFragmentBinding) {

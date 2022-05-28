@@ -12,6 +12,19 @@
         <action
             android:id="@+id/toPostContentFragment"
             app:destination="@+id/postContentFragment" />
+        <action
+            android:id="@+id/toPostFragment"
+            app:destination="@id/postFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/postFragment"
+        android:name="ru.netology.nmedia.ui.PostFragment"
+        android:label="post_fragment"
+        tools:layout="@layout/post"
+        >
+        <action
+            android:id="@+id/FromPostToPostContentFragment"
+            app:destination="@id/postContentFragment" />
     </fragment>
     <fragment
         android:id="@+id/postContentFragment"
