@@ -72,11 +72,9 @@ internal class PostsAdapter(
                 postAuthorName.text = post.author
                 postText.text = post.content
                 postDate.text = post.published
-                postFavoriteText.text = countNumbers(post.likes)
-                postShareText.text = countNumbers(post.shares)
-                postFavoriteButton.setImageResource(getLikeIconResId(post.likedByMe))
+                postFavoriteButton.text = countNumbers(post.likes)
+                postShareButton.text = countNumbers(post.shares)
                 videoGroup.isVisible = post.video != null
-
             }
         }
         private fun countNumbers(likes: Int): String {

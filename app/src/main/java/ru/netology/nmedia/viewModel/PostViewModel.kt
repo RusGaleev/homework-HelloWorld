@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import ru.netology.nmedia.adapter.PostInteractionsListener
 import ru.netology.nmedia.data.Post
 import ru.netology.nmedia.data.PostRepository
+import ru.netology.nmedia.data.impl.FilePostRepository
 import ru.netology.nmedia.data.impl.InMemoryPostRepository
 import ru.netology.nmedia.util.SingleLiveEvent
 
@@ -36,7 +37,7 @@ class PostViewModel(
             author = "Me",
             content = content,
             published = "Today",
-            video = null
+            video = "https://www.youtube.com/watch?v=WhWc3b3KhnY"
         )
         repository.save(newPost)
         currentPost.value = null
