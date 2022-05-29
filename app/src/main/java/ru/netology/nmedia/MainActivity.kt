@@ -1,15 +1,16 @@
 package ru.netology.nmedia
 
-import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
+
+import android.content.Intent
+import android.net.Uri
+
 import android.os.Bundle
-import android.view.View
+import androidx.activity.result.launch
 import androidx.activity.viewModels
-import androidx.core.content.edit
-import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatActivity
+import ru.netology.nmedia.activity.PostContentActivity
 import ru.netology.nmedia.adapter.PostsAdapter
 import ru.netology.nmedia.databinding.ActivityMainBinding
-import ru.netology.nmedia.util.hideKeyboard
 import ru.netology.nmedia.viewModel.PostViewModel
 
 
@@ -23,53 +24,38 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        run{
-//            val preferences = getPreferences(Context.MODE_PRIVATE)
-//            preferences.edit{
-//                putString("key", "value")
-//            }
-//        }
-//
-//        run{
-//            val preferences = getPreferences(Context.MODE_PRIVATE)
-//            val value = preferences.getString("key", "no value") ?: return@run
-//            Snackbar.make(binding.root, value, Snackbar.LENGTH_INDEFINITE).show()
-//        }
-
-        binding.editGroup.visibility = View.GONE
         val adapter = PostsAdapter(viewModel)
         binding.postsRecyclerView.adapter = adapter
         viewModel.data.observe(this) { posts ->
             adapter.submitList(posts)
         }
-        binding.saveButton.setOnClickListener{
-            with(binding.contentEditText) {
-                val content = text.toString()
-                viewModel.onSaveButtonClick(content)
-                clearFocus()
-                hideKeyboard()
-            }
-            binding.editGroup.visibility = View.GONE
-        }
-        binding.closeButton.setOnClickListener{
-            binding.editGroup.visibility = View.GONE
-            with(binding.contentEditText) {
-                clearFocus()
-                hideKeyboard()
-                viewModel.currentPost.value = null
-            }
-        }
-        viewModel.currentPost.observe(this){ currentPost ->
-            with(binding.contentEditText) {
-                val content = currentPost?.content
-                setText(content)
-                if(content != null) {
-                    requestFocus()
-                    binding.editGroup.visibility = View.VISIBLE
-                }
-            }
-            binding.contentTextView.text = currentPost?.content
 
+        binding.fab.setOnClickListener {
+            viewModel.onAddClicked()
+        }
+
+        val postContentActivityLauncher = registerForActivityResult(
+            PostContentActivity.ResultContract
+        ) { postContent ->
+            postContent ?: return@registerForActivityResult
+            viewModel.onSaveButtonClick(postContent)
+        }
+
+        viewModel.navigateToPostContentScreenEvent.observe(this) {
+            postContentActivityLauncher.launch("")
+        }
+
+        viewModel.editPostContentScreenEvent.observe(this) { initialContent ->
+            postContentActivityLauncher.launch(initialContent)
+        }
+
+        viewModel.playVideo.observe(this) { videoUrl ->
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse(videoUrl)
+            }
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivity(intent)
+            }
         }
     }
 }
