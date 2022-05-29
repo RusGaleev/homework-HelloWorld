@@ -1,7 +1,9 @@
 package ru.netology.nmedia
 
+
 import android.content.Intent
 import android.net.Uri
+
 import android.os.Bundle
 import androidx.activity.result.launch
 import androidx.activity.viewModels
@@ -21,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         val adapter = PostsAdapter(viewModel)
         binding.postsRecyclerView.adapter = adapter
         viewModel.data.observe(this) { posts ->
