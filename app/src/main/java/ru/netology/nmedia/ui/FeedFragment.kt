@@ -20,17 +20,17 @@ class FeedFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.sharePostContent.observe(this) { postContent ->
-            val intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, postContent)
-                type = "text/plain"
-            }
-            val shareIntent = Intent.createChooser(
-                intent, "Share post"
-            )
-            startActivity(shareIntent)
-        }
+//        viewModel.sharePostContent.observe(this) { postContent ->
+//            val intent = Intent().apply {
+//                action = Intent.ACTION_SEND
+//                putExtra(Intent.EXTRA_TEXT, postContent)
+//                type = "text/plain"
+//            }
+//            val shareIntent = Intent.createChooser(
+//                intent, "Share post"
+//            )
+//            startActivity(shareIntent)
+//        }
 
         setFragmentResultListener(
             requestKey = PostContentFragment.REQUEST_KEY
@@ -44,6 +44,10 @@ class FeedFragment : Fragment() {
 
         viewModel.navigateToPostContentScreenEvent.observe(this) { initialContent ->
             val direction = FeedFragmentDirections.toPostContentFragment(initialContent)
+            findNavController().navigate(direction)
+        }
+        viewModel.navigateToPostScreenEvent.observe(this) {postId ->
+            val direction = FeedFragmentDirections.toPostFragment(postId)
             findNavController().navigate(direction)
         }
     }
@@ -61,6 +65,9 @@ class FeedFragment : Fragment() {
         binding.fab.setOnClickListener {
             viewModel.onAddClicked()
         }
+//        binding.postsRecyclerView.setOnClickListener{
+//            viewModel.onPostClicked() //НАЙТИ ПОСТ ПО id
+//        }
     }.root
 
     companion object {

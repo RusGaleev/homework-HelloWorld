@@ -12,7 +12,8 @@ class PostViewModel:ViewModel(), PostInteractionsListener {
     private val repository: PostRepository = InMemoryPostRepository()
     val data by repository::data
     val navigateToPostContentScreenEvent = SingleLiveEvent<String>()
-    val sharePostContent = SingleLiveEvent<String>()
+    val navigateToPostScreenEvent = SingleLiveEvent<Long>()
+//    val sharePostContent = SingleLiveEvent<String>()
     val currentPost = MutableLiveData<Post?>(null)
 
     fun onSaveButtonClick(content:String){
@@ -32,6 +33,11 @@ class PostViewModel:ViewModel(), PostInteractionsListener {
 
     fun onAddClicked(){
         navigateToPostContentScreenEvent.call()
+    }
+
+    override fun onPostClicked(post: Post){
+        navigateToPostScreenEvent.call()
+        navigateToPostScreenEvent.value = post.id
     }
 
     // region PostInteractionsListener

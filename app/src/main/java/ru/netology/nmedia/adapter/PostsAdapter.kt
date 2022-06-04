@@ -55,6 +55,7 @@ internal class PostsAdapter(
             binding.postShareButton.setOnClickListener{listener.onShareClicked(post)}
             binding.postFavoriteButton.setOnClickListener{listener.onLikeClicked(post)}
             binding.postOptions.setOnClickListener { popupMenu.show() }
+            binding.postCard.setOnClickListener{listener.onPostClicked(post)}
         }
 
         fun bind(post: Post) {
