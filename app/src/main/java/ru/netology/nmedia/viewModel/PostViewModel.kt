@@ -36,7 +36,6 @@ class PostViewModel:ViewModel(), PostInteractionsListener {
     }
 
     override fun onPostClicked(post: Post){
-        navigateToPostScreenEvent.call()
         navigateToPostScreenEvent.value = post.id
     }
 

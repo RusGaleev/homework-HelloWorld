@@ -22,7 +22,7 @@
         android:label="post_fragment"
         tools:layout="@layout/post_fragment">
         <action
-            android:id="@+id/FromPostToPostContentFragment"
+            android:id="@+id/fromPostToPostContentFragment"
             app:destination="@id/postContentFragment" />
         <argument
             android:name="postId"

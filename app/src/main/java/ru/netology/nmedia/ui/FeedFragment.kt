@@ -1,6 +1,5 @@
 package ru.netology.nmedia.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -46,6 +45,7 @@ class FeedFragment : Fragment() {
             val direction = FeedFragmentDirections.toPostContentFragment(initialContent)
             findNavController().navigate(direction)
         }
+
         viewModel.navigateToPostScreenEvent.observe(this) {postId ->
             val direction = FeedFragmentDirections.toPostFragment(postId)
             findNavController().navigate(direction)
@@ -65,9 +65,6 @@ class FeedFragment : Fragment() {
         binding.fab.setOnClickListener {
             viewModel.onAddClicked()
         }
-//        binding.postsRecyclerView.setOnClickListener{
-//            viewModel.onPostClicked() //НАЙТИ ПОСТ ПО id
-//        }
     }.root
 
     companion object {

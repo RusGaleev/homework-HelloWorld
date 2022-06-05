@@ -27,10 +27,11 @@ class PostFragment : Fragment() {
     ) = PostFragmentBinding.inflate(
         layoutInflater, container, false
     ).also { binding->
-//        binding.postShareButton.setOnClickListener{listener.onShareClicked(post)}
-//        binding.postFavoriteButton.setOnClickListener{listener.onLikeClicked(post)}
-//        binding.postOptions.setOnClickListener { popupMenu.show() }
-//        binding.postCard.setOnClickListener{ }
+        val adapter = PostsAdapter(viewModel)
+        binding.postCard.adapter = adapter
+        viewModel.data.observe(viewLifecycleOwner) { posts ->
+            adapter.submitList(posts.filter { it.id == args.postId })
+        }
 
         setFragmentResultListener(
             requestKey = PostContentFragment.REQUEST_KEY
@@ -43,13 +44,9 @@ class PostFragment : Fragment() {
         }
 
         viewModel.navigateToPostContentScreenEvent.observe(this) { initialContent ->
-            val direction = FeedFragmentDirections.toPostContentFragment(initialContent)
+            val direction = PostFragmentDirections.fromPostToPostContentFragment(initialContent)
             findNavController().navigate(direction)
         }
     }.root
 
-    companion object {
-        const val REQUEST_KEY = "requestKey"
-        const val RESULT_KEY = "postNewContent"
-    }
 }
