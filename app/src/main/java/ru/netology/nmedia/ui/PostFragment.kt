@@ -11,27 +11,31 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import ru.netology.nmedia.adapter.PostsAdapter
+import ru.netology.nmedia.adapter.ViewHolder
 import ru.netology.nmedia.databinding.PostContentFragmentBinding
 import ru.netology.nmedia.databinding.PostFragmentBinding
 import ru.netology.nmedia.viewModel.PostViewModel
 
 class PostFragment : Fragment() {
 
-    private val viewModel by viewModels<PostViewModel>()
+    private val viewModel by viewModels<PostViewModel>(ownerProducer = ::requireParentFragment)
     private val args by navArgs<PostFragmentArgs>()
 
-    override fun onCreateView(
+        override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ) = PostFragmentBinding.inflate(
         layoutInflater, container, false
     ).also { binding->
-        val adapter = PostsAdapter(viewModel)
-        binding.postCard.adapter = adapter
-        viewModel.data.observe(viewLifecycleOwner) { posts ->
-            adapter.submitList(posts.filter { it.id == args.postId })
-        }
+            val viewHolder = ViewHolder(binding.postCard, viewModel)
+            viewModel.data.observe(viewLifecycleOwner) { posts ->
+                val post = posts.find { it.id == args.postId } ?: run {
+                    findNavController().navigateUp() // the post was deleted, close the fragment
+                    return@observe
+                }
+                viewHolder.bind(post)
+            }
 
         setFragmentResultListener(
             requestKey = PostContentFragment.REQUEST_KEY
